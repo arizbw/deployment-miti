@@ -1,13 +1,7 @@
-Welcome to Lumache's documentation!
-===================================
+Final Project MITI Deployment Documentation
+===========================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
 
 .. note::
 
@@ -17,6 +11,20 @@ Contents
 --------
 
 .. toctree::
+   :caption: 💡 Pendahuluan
 
-   usage
-   api
+   setup/Setup-GKE
+
+.. toctree::
+   :caption: 🚀 Proses Instalasi & Konfigurasi
+
+   steps/Web-Profile
+   steps/E-Commerce
+   steps/Database
+   steps/Monitoring
+   steps/SSO
+
+.. toctree::
+   :caption: 📚 Referensi
+
+   references/References

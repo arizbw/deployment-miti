@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'Final Project MITI'
+copyright = '2023, Fakultas Ilmu Komputer - Universitas Indonesia'
+author = 'MITI Class 2023'
 
 release = '0.1'
 version = '0.1.0'
