@@ -19,12 +19,38 @@ Pada proses instalasi Keycloak, kami menggunakan Helm sebagai *package manager* 
 
 Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses *authentication* atau *log in* dapat menggunakan akun Keycloak yang sudah di *define* di konfigurasi *console* Keycloak.
 
+Prequisite
+----------------
+Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:
+
+- Sudah memiliki host database
+- Cluster Kubernetes aktif
+- Wordpress beserta Persistent Volume Claim (PVC) yang sesuai
+
+
+
+
 Proses Instalasi
 ----------------
+Pemasangan fitur SSO pada kluster ini setidaknya memiliki 5 langkah utama, yaitu mulai dari mempersiapkan *database*, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, dan terakhir konfigurasi WordPress.
 
+Deployment Keycloak kami luncurkan sebagai sebuah service tersendiri dan memiliki external IP yang dapat diakses melalui http://34.101.223.88 . Semua *resource* yang dipasang untuk deployment Keycloak berada pada *namespace* "default".
 
-Mempersiapkan Database
+Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SSO menggunakan Keycloak :
+
+Mempersiapkan *Database*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user keycloak di dalam host tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
+
+.. code-block:: sql
+
+   CREATE DATABASE keycloak;
+   GRANT ALL PRIVILEGES ON keycloak.* TO 'keycloak'@'%' IDENTIFIED BY 'password';
+   FLUSH PRIVILEGES;
+   EXIT;
+
+.. figure:: ../assets/keycloak-images/keycloak-image20.png
+   :align: center
 
 Instalasi *Package Manager* Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
