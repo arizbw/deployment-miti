@@ -40,7 +40,7 @@ Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SS
 
 Mempersiapkan *Database*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user keycloak di dalam host tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
+Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user Keycloak di dalam host tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
 
 .. code-block:: sql
 
@@ -49,23 +49,76 @@ Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu m
    FLUSH PRIVILEGES;
    EXIT;
 
-.. figure:: ../assets/keycloak-images/keycloak-image20.png
+.. figure:: ../assets/keycloak-images/keycloak-image5.png
    :align: center
 
+   membuat database dan user baru pada MariaDB
+
+Setelah itu, Cek nama service MariaDB yang sudah diinstal.
+
+.. code-block:: bash
+
+   kubectl get svc
+
+.. figure:: ../assets/keycloak-images/keycloak-image10.png
+   :align: center
+
+   mendapatkan nama service host database
+
 Instalasi *Package Manager* Helm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Helm memudahkan kita untuk melakukan instalasi Keycloak karena Helm sudah melakukan pre-konfigurasi dan Helm juga menyediakan segala dependency yang dibutuhkan untuk menjalankan Keycloak.
+Saya menggunakan Helm chart yang di `mantain` oleh Codecentric. Pertama, kita menambahkan repository ``codecentric`` yang isinya adalah `collection` chart Helm.
+
+.. code-block:: bash
+
+   helm repo add codecentric https://codecentric.github.io/helm-charts
+
+.. figure:: ../assets/keycloak-images/keycloak-image19.png
+   :align: center
+
+   Helm chart dari codecentric
+
+Next, create a values file for the Keycloak Helm chart. Name it values.yaml:
+Kemudian, buat sebuah file yaml bernama ``values.yaml`` untuk chart Keycloak Helm.
+
+.. code-block:: yaml
+
+ keycloak:
+  persistence:
+    dbVendor: mariadb
+    dbName: keycloak
+    dbHost: mariadb-1-mariadb
+    dbUser: keycloak
+    dbPassword: password
+  username: admin
+  password: admin
+  ingress:
+    enabled: false
+  extraEnv: |
+    - name: KEYCLOAK_FRONTEND_URL
+      value: "http://<External-IP>/auth"
+
+.. figure:: ../assets/keycloak-images/keycloak-image21.png
+   :align: center
+
+   isi values.yaml
+
+value <External-IP> akan diganti nanti. Untuk saat ini simpan ``values.yaml`` terlebih dahulu.
+
+
 
 *Deployment* Keycloak via Helm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Konfigurasi admin Keycloak
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instalasi *plugin* OpenID Connector pada WordPress
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Konfigurasi *plugin* OpenID Connector pada Wordpress
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Skenario Testing
 ----------------
