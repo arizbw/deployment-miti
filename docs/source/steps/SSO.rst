@@ -19,12 +19,12 @@ Pada proses instalasi Keycloak, kami menggunakan Helm sebagai *package manager* 
 
 Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses *authentication* atau *log in* dapat menggunakan akun Keycloak yang sudah di *define* di konfigurasi *console* Keycloak.
 
-Prequisite
-----------------
+Prerequisites
+-------------
 Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:
 
-- Sudah memiliki host database
-- Cluster Kubernetes aktif
+- Sudah memiliki `host` database
+- Kluster Kubernetes aktif
 - Wordpress beserta Persistent Volume Claim (PVC) yang sesuai
 
 
@@ -38,8 +38,8 @@ Deployment Keycloak kami luncurkan sebagai sebuah service tersendiri dan memilik
 
 Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SSO menggunakan Keycloak :
 
-Mempersiapkan *Database*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mempersiapkan *Database* Keycloak
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user Keycloak di dalam host tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
 
 .. code-block:: sql
@@ -68,7 +68,7 @@ Setelah itu, Cek nama service MariaDB yang sudah diinstal.
 Instalasi *Package Manager* Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helm memudahkan kita untuk melakukan instalasi Keycloak karena Helm sudah melakukan pre-konfigurasi dan Helm juga menyediakan segala dependency yang dibutuhkan untuk menjalankan Keycloak.
-Saya menggunakan Helm chart yang di `mantain` oleh Codecentric. Pertama, kita menambahkan repository ``codecentric`` yang isinya adalah `collection` chart Helm.
+Saya menggunakan Helm chart yang di `mantain` oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan `repository` dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository ``codecentric`` yang isinya adalah `collection` chart Helm.
 
 .. code-block:: bash
 
@@ -79,8 +79,7 @@ Saya menggunakan Helm chart yang di `mantain` oleh Codecentric. Pertama, kita me
 
    Helm chart dari codecentric
 
-Next, create a values file for the Keycloak Helm chart. Name it values.yaml:
-Kemudian, buat sebuah file yaml bernama ``values.yaml`` untuk chart Keycloak Helm.
+Kemudian, buat sebuah file yaml bernama ``values.yaml`` untuk chart Keycloak Helm. File ini menyimpan konfigurasi Keycloak Helm yang akan digunakan pada projek ini.
 
 .. code-block:: yaml
 
@@ -106,7 +105,59 @@ Kemudian, buat sebuah file yaml bernama ``values.yaml`` untuk chart Keycloak Hel
 
 value <External-IP> akan diganti nanti. Untuk saat ini simpan ``values.yaml`` terlebih dahulu.
 
+Sekarang kita dapat menginstal `chart` Keycloak dengan menggunakan konfigurasi yang sudah disimpan di ``values.yaml``.
 
+.. code-block:: bash
+
+   helm install keycloak codecentric/keycloak -f values.yaml --namespace default
+
+.. figure:: ../assets/keycloak-images/keycloak-image13.png
+   :align: center
+
+   instal chart Helm
+
+Setelah proses instal selesai, cek apakah `service` Keycloak sudah berjalan.
+
+.. code-block:: bash
+
+   kubectl get svc --namespace default
+
+.. figure:: ../assets/keycloak-images/keycloak-image4.png
+   :align: center
+
+   daftar `service` yang ada pada `namespace` ``default``
+
+`Service` keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan `expose` ke `pod` yang memiliki `service` Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama `pod` yang dipakai adalah ``keycloak-0``. Saya menamakan `service` yang diekspos tersebut ``keycloak-external``.
+
+.. figure:: ../assets/keycloak-images/keycloak-image9.png
+   :align: center
+
+   expose pod yang mengandung service Keycloak
+
+Kemudian cek apakah `service` ``keycloak-external`` sudah berjalan.
+
+.. figure:: ../assets/keycloak-images/keycloak-image20.png
+   :align: center
+
+   daftar service pada namespace default
+
+Disini kita mendapatkan `external` IP `service` tersebut adalah 34.101.223.88:80.
+
+Setelah itu buka file ``values.yaml`` dan ganti <External-IP> menjadi `external` IP `service` ``keycloak-external``.
+
+.. figure:: ../assets/keycloak-images/keycloak-image18.png
+   :align: center
+
+   update external IP pada ``values.yaml``
+
+Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
+
+.. code-block:: bash
+
+   helm upgrade keycloak codecentric/keycloak -f values.yaml --namespace default
+
+Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak `service` untuk penginstalan Keycloak. Awalnya kita menggunakan `service` ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+upgrade kita dapat menggunakan `service` ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
 
 *Deployment* Keycloak via Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

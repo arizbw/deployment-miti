@@ -56,9 +56,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Monitoring.html">Monitoring</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SSO</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#prequisite">Prequisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#proses-instalasi">Proses Instalasi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#mempersiapkan-database">Mempersiapkan <em>Database</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mempersiapkan-database-keycloak">Mempersiapkan <em>Database</em> Keycloak</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#instalasi-package-manager-helm">Instalasi <em>Package Manager</em> Helm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deployment-keycloak-via-helm"><em>Deployment</em> Keycloak via Helm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#konfigurasi-admin-keycloak">Konfigurasi admin Keycloak</a></li>
@@ -117,12 +117,12 @@
 <p>Aplikasi integrasi SSO yang digunakan dalam tugas ini adalah Keycloak. Kami memilih Keycloak karena merupakan solusi <em>open-source</em> yang paling sering digunakan dan relatif mudah digunakan. Dengan Keycloak, kami dapat membuat 2 jenis protokol untuk authorization yaitu OpenID atau SAML 2.0. Namun untuk instalasi pada kali ini, kami memilih protokol OpenID yang akan diterapkan.</p>
 <p>Pada proses instalasi Keycloak, kami menggunakan Helm sebagai <em>package manager</em> untuk menginstall dan mengelola aplikasi di dalam cluster Kubernetes kami. Helm memungkinkan kami untuk dengan mudah mendefinisikan dan menyebarkan konfigurasi Keycloak serta komponen-komponen terkaitnya dalam lingkungan Kubernetes. Selain itu, Helm juga memungkinkan kami untuk melakukan <em>upgrade</em> dan <em>rollback</em> secara mudah serta memastikan bahwa kami memiliki versi Keycloak yang konsisten.</p>
 <p>Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses <em>authentication</em> atau <em>log in</em> dapat menggunakan akun Keycloak yang sudah di <em>define</em> di konfigurasi <em>console</em> Keycloak.</p>
-<section id="prequisite">
-<h2>Prequisite<a class="headerlink" href="#prequisite" title="Permalink to this heading"></a></h2>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
 <p>Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:</p>
 <ul class="simple">
-<li><p>Sudah memiliki host database</p></li>
-<li><p>Cluster Kubernetes aktif</p></li>
+<li><p>Sudah memiliki <cite>host</cite> database</p></li>
+<li><p>Kluster Kubernetes aktif</p></li>
 <li><p>Wordpress beserta Persistent Volume Claim (PVC) yang sesuai</p></li>
 </ul>
 </section>
@@ -131,8 +131,8 @@
 <p>Pemasangan fitur SSO pada kluster ini setidaknya memiliki 5 langkah utama, yaitu mulai dari mempersiapkan <em>database</em>, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, dan terakhir konfigurasi WordPress.</p>
 <p>Deployment Keycloak kami luncurkan sebagai sebuah service tersendiri dan memiliki external IP yang dapat diakses melalui <a class="reference external" href="http://34.101.223.88">http://34.101.223.88</a> . Semua <em>resource</em> yang dipasang untuk deployment Keycloak berada pada <em>namespace</em> “default”.</p>
 <p>Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SSO menggunakan Keycloak :</p>
-<section id="mempersiapkan-database">
-<h3>Mempersiapkan <em>Database</em><a class="headerlink" href="#mempersiapkan-database" title="Permalink to this heading"></a></h3>
+<section id="mempersiapkan-database-keycloak">
+<h3>Mempersiapkan <em>Database</em> Keycloak<a class="headerlink" href="#mempersiapkan-database-keycloak" title="Permalink to this heading"></a></h3>
 <p>Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user Keycloak di dalam host tersebut. Masuk ke dalam <em>console</em> MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :</p>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">keycloak</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">keycloak</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;keycloak&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">;</span>
@@ -160,7 +160,7 @@
 <section id="instalasi-package-manager-helm">
 <h3>Instalasi <em>Package Manager</em> Helm<a class="headerlink" href="#instalasi-package-manager-helm" title="Permalink to this heading"></a></h3>
 <p>Helm memudahkan kita untuk melakukan instalasi Keycloak karena Helm sudah melakukan pre-konfigurasi dan Helm juga menyediakan segala dependency yang dibutuhkan untuk menjalankan Keycloak.
-Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Pertama, kita menambahkan repository <code class="docutils literal notranslate"><span class="pre">codecentric</span></code> yang isinya adalah <cite>collection</cite> chart Helm.</p>
+Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan <cite>repository</cite> dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository <code class="docutils literal notranslate"><span class="pre">codecentric</span></code> yang isinya adalah <cite>collection</cite> chart Helm.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>codecentric<span class="w"> </span>https://codecentric.github.io/helm-charts
 </pre></div>
 </div>
@@ -170,8 +170,7 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Perta
 <p><span class="caption-text">Helm chart dari codecentric</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Next, create a values file for the Keycloak Helm chart. Name it values.yaml:
-Kemudian, buat sebuah file yaml bernama <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> untuk chart Keycloak Helm.</p>
+<p>Kemudian, buat sebuah file yaml bernama <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> untuk chart Keycloak Helm. File ini menyimpan konfigurasi Keycloak Helm yang akan digunakan pada projek ini.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">keycloak</span><span class="p">:</span>
 <span class="w"> </span><span class="nt">persistence</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">dbVendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mariadb</span>
@@ -195,6 +194,54 @@ Kemudian, buat sebuah file yaml bernama <code class="docutils literal notranslat
 </figcaption>
 </figure>
 <p>value &lt;External-IP&gt; akan diganti nanti. Untuk saat ini simpan <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> terlebih dahulu.</p>
+<p>Sekarang kita dapat menginstal <cite>chart</cite> Keycloak dengan menggunakan konfigurasi yang sudah disimpan di <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>keycloak<span class="w"> </span>codecentric/keycloak<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>--namespace<span class="w"> </span>default
+</pre></div>
+</div>
+<figure class="align-center" id="id5">
+<img alt="../_images/keycloak-image13.png" src="../_images/keycloak-image13.png" />
+<figcaption>
+<p><span class="caption-text">instal chart Helm</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Setelah proses instal selesai, cek apakah <cite>service</cite> Keycloak sudah berjalan.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>--namespace<span class="w"> </span>default
+</pre></div>
+</div>
+<figure class="align-center" id="id6">
+<img alt="../_images/keycloak-image4.png" src="../_images/keycloak-image4.png" />
+<figcaption>
+<p><span class="caption-text">daftar <cite>service</cite> yang ada pada <cite>namespace</cite> <code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><cite>Service</cite> keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan <cite>expose</cite> ke <cite>pod</cite> yang memiliki <cite>service</cite> Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama <cite>pod</cite> yang dipakai adalah <code class="docutils literal notranslate"><span class="pre">keycloak-0</span></code>. Saya menamakan <cite>service</cite> yang diekspos tersebut <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
+<figure class="align-center" id="id7">
+<img alt="../_images/keycloak-image9.png" src="../_images/keycloak-image9.png" />
+<figcaption>
+<p><span class="caption-text">expose pod yang mengandung service Keycloak</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Kemudian cek apakah <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> sudah berjalan.</p>
+<figure class="align-center" id="id8">
+<img alt="../_images/keycloak-image20.png" src="../_images/keycloak-image20.png" />
+<figcaption>
+<p><span class="caption-text">daftar service pada namespace default</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Disini kita mendapatkan <cite>external</cite> IP <cite>service</cite> tersebut adalah 34.101.223.88:80.</p>
+<p>Setelah itu buka file <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> dan ganti &lt;External-IP&gt; menjadi <cite>external</cite> IP <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
+<figure class="align-center" id="id9">
+<img alt="../_images/keycloak-image18.png" src="../_images/keycloak-image18.png" />
+<figcaption>
+<p><span class="caption-text">update external IP pada <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code></span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>upgrade<span class="w"> </span>keycloak<span class="w"> </span>codecentric/keycloak<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>--namespace<span class="w"> </span>default
+</pre></div>
+</div>
+<p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <cite>service</cite> untuk penginstalan Keycloak. Awalnya kita menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+upgrade kita dapat menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
 </section>
 <section id="deployment-keycloak-via-helm">
 <h3><em>Deployment</em> Keycloak via Helm<a class="headerlink" href="#deployment-keycloak-via-helm" title="Permalink to this heading"></a></h3>
