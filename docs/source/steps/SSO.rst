@@ -23,7 +23,23 @@ Proses Instalasi
 ----------------
 
 
-TODO
+Mempersiapkan Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instalasi *Package Manager* Helm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Deployment* Keycloak via Helm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Konfigurasi admin Keycloak
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instalasi *plugin* OpenID Connector pada WordPress
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Konfigurasi *plugin* OpenID Connector pada Wordpress
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Skenario Testing
 ----------------
