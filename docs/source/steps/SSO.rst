@@ -127,6 +127,12 @@ Setelah proses instal selesai, cek apakah `service` Keycloak sudah berjalan.
 
    daftar `service` yang ada pada `namespace` ``default``
 
+Pada tahap ini, `service` Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan `port-forwarding` terlebih dahulu melalui terminal kluster. Setelah itu, dashboard `console` admin Keycloak bisa dibuka.
+Tentu saja ini membuat pengalaman memakai `console` admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan `expose` agar `console` admin dapat diakses dari luar.
+
+*Deployment* Keycloak via Helm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 `Service` keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan `expose` ke `pod` yang memiliki `service` Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama `pod` yang dipakai adalah ``keycloak-0``. Saya menamakan `service` yang diekspos tersebut ``keycloak-external``.
 
 .. figure:: ../assets/keycloak-images/keycloak-image9.png
@@ -159,8 +165,7 @@ Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
 Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak `service` untuk penginstalan Keycloak. Awalnya kita menggunakan `service` ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
 upgrade kita dapat menggunakan `service` ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
 
-*Deployment* Keycloak via Helm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Konfigurasi admin Keycloak
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -214,6 +214,11 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebel
 <p><span class="caption-text">daftar <cite>service</cite> yang ada pada <cite>namespace</cite> <code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
+<p>Pada tahap ini, <cite>service</cite> Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan <cite>port-forwarding</cite> terlebih dahulu melalui terminal kluster. Setelah itu, dashboard <cite>console</cite> admin Keycloak bisa dibuka.
+Tentu saja ini membuat pengalaman memakai <cite>console</cite> admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan <cite>expose</cite> agar <cite>console</cite> admin dapat diakses dari luar.</p>
+</section>
+<section id="deployment-keycloak-via-helm">
+<h3><em>Deployment</em> Keycloak via Helm<a class="headerlink" href="#deployment-keycloak-via-helm" title="Permalink to this heading"></a></h3>
 <p><cite>Service</cite> keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan <cite>expose</cite> ke <cite>pod</cite> yang memiliki <cite>service</cite> Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama <cite>pod</cite> yang dipakai adalah <code class="docutils literal notranslate"><span class="pre">keycloak-0</span></code>. Saya menamakan <cite>service</cite> yang diekspos tersebut <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
 <figure class="align-center" id="id7">
 <img alt="../_images/keycloak-image9.png" src="../_images/keycloak-image9.png" />
@@ -242,9 +247,6 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebel
 </div>
 <p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <cite>service</cite> untuk penginstalan Keycloak. Awalnya kita menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
 upgrade kita dapat menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
-</section>
-<section id="deployment-keycloak-via-helm">
-<h3><em>Deployment</em> Keycloak via Helm<a class="headerlink" href="#deployment-keycloak-via-helm" title="Permalink to this heading"></a></h3>
 </section>
 <section id="konfigurasi-admin-keycloak">
 <h3>Konfigurasi admin Keycloak<a class="headerlink" href="#konfigurasi-admin-keycloak" title="Permalink to this heading"></a></h3>
