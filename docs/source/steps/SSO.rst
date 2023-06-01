@@ -54,7 +54,7 @@ Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu m
 
    membuat database dan user baru pada MariaDB
 
-Setelah itu, Cek nama service MariaDB yang sudah diinstal.
+Setelah itu, Cek nama *service* MariaDB yang sudah diinstal.
 
 .. code-block:: bash
 
@@ -162,21 +162,145 @@ Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
 
    helm upgrade keycloak codecentric/keycloak -f values.yaml --namespace default
 
-Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak `service` untuk penginstalan Keycloak. Awalnya kita menggunakan `service` ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
-upgrade kita dapat menggunakan `service` ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
+.. note::
+
+   Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak `service` untuk penginstalan Keycloak. Awalnya kita menggunakan `service` ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+   *upgrade* kita dapat menggunakan `service` ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
+
+
 
 
 
 Konfigurasi admin Keycloak
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Pada tahap ini, consol admin Keycloak sudah dapat diakses pada http://34.101.223.88/. Jika belum pernah mendaftarkan *username* dan *password* maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman log in. Masukkan credential admin untuk masuk ke dashboard.
+
+.. figure:: ../assets/keycloak-images/keycloak-image14.png
+   :align: center
+
+   halaman login consol Keycloak
+
+Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai login ke WordPress.
+Kita akan menamakan Realm ini dengan nama ``WordPress``. Untuk membuat Realm, klik *dropdown* pada kiri atas bar navigasi dan pilih **Add realm**.
+
+.. figure:: ../assets/keycloak-images/keycloak-image6.png
+   :align: center
+
+   membuat Realm ``WordPress``
+
+Setelah membuat Realm, kita harus membuat *client* dan *user*. Untuk membuat *client* pilih **Client** pada bar navigasi. Isi informasi *client* seperti berikut :
+
+.. code-block:: yaml
+
+   Client ID: wordpress
+   Root URL: http://34.101.65.200
+   Valid Redirect URIs: /*
+   Base URL: /
+   Client Protocol: openid-connect
+   Access Type: public
+
+Simpan informasi *client* tersebut. Setelah itu, kita perlu membuat *user* yang nantinya akan kita pakai untuk login ke consol admin WordPress.
+Untuk membuat *user* pilih **Users** pada bar navigasi dan klik **Add user**. Isi informasi *user* seperti berikut :
+
+.. code-block:: yaml
+
+   username: sendi
+   email: sendisiradj@gmail.com
+   First name: Muhammad Sendi
+   Last name: Siradj
+   password: admin
+   Temporary: OFF
+
+Jangan lupa untuk mengatur **Temporary : OFF** dikarenakan kita berniat untuk terus memakai *password* tersebut.
+
+
+Konfigurasi admin Keycloak sudah selesai sampai disini.
+
 Instalasi *plugin* OpenID Connector pada WordPress
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pada bagian ini, kita akan menginstal *plugin* pada WordPress untuk menghubungkan otentikasi dan otorisasi WordPress dengan Keycloak. Jika WordPress di *deploy* menggunakan lebih dari 1 *pod* maka pastikan sudah menginstal PVC terlebih dahulu.
+Ini dikarenakan *plugin* akan disimpan dalam *filesystem* WordPress sehingga butuh *storage* yang konsisten agar tidak bermasalah saat kluster berpindah-pindah *pods*.
+
+Masuk ke halaman consol admin WordPress melalui http://34.101.65.200/wp-admin/ dan masuk menggunakan akun admin WordPress. Akun ini didapatkan ketika pertama kali menginstal WordPress.
+Untuk menginstal plugin, pilih menu **Plugins** dan pilih **Add new** pada bar navigasi consol admin Wordpress. Kemudian cari *plugin* bernama "OpenID Connect Generic". Kita juga dapat menginstall *plugin* dengan cara mengunduh *plugin* ini melalui :
+https://wordpress.org/plugins/daggerhart-openid-connect-generic/
+
+.. figure:: ../assets/keycloak-images/keycloak-image16.png
+   :align: center
+
+   bar navigasi consol admin WordPress
 
 Konfigurasi *plugin* OpenID Connector pada Wordpress
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Setelah itu tekan tombol **Activate** pada *plugin* tersebut. Jika sudah, maka kita bisa melihat ada menu tambahan yaitu "OpenID Generic Client" pada *section* **Settings** di bar navigasi admin.
+
+.. figure:: ../assets/keycloak-images/keycloak-image12.png
+   :align: center
+
+   OpenID Connect Client setting
+
+Setelah itu isi informasi *setting* seperti berikut :
+
+.. code-block:: yaml
+
+   Client ID: wordpress
+   Scope: openid email
+   Endpoint Login URL: http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/auth
+   Endpoint Userinfo URL: http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/userinfo
+   Endpoint Token URL: http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/token
+   Endpoint Logout URL: http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/logout
+   Identity Key: preferred_username
+
+Informasi *endpoint* di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian **Realm settings > Endpoints > OpenID Endpoint Configuration**.
+Kemudian pada *section* **WordPress User Setting** kita perlu mencentang **Link Existing Users** agar *user* yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan *error* **User Creation Failed** saat login menggunakan *user* dari Keycloak.
+
+Berikut ini adalah gambaran setting untuk *plugin* OpenID Connector :
+
+.. figure:: ../assets/keycloak-images/keycloak-image15.png
+   :align: center
+
+   setting plugin
+
+.. figure:: ../assets/keycloak-images/keycloak-image2.png
+   :align: center
+
+   aktifkan **Link Existing Users**
+
+Tekan tombol **Save Changes** jika sudah selesai dengan *setting*.
+
 Skenario Testing
 ----------------
 
-TODO
+Untuk melakukan testing, kita dapat *logout* dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman *login*. Saatnya kita menggunakan *user* yang sudah kita buat di Keycloak pada langkah sebelumnya.
+
+.. figure:: ../assets/keycloak-images/keycloak-image1.png
+   :align: center
+
+   login via OpenID Client
+
+Pilih tombol *Login with OpenID Client*.
+*Username* akun tadi adalah ``sendi``
+
+.. figure:: ../assets/keycloak-images/keycloak-image7.png
+   :align: center
+
+   masuk menggunakan username dan password user Keycloak
+
+Voila! kita sudah berhasil *login* menggunakan *user* dari Keycloak.
+
+.. figure:: ../assets/keycloak-images/keycloak-image11.png
+   :align: center
+
+   halaman dashboard *user* ``sendi``
+
+Terakhir, pastikan *user* ``sendi`` sudah tercatat sebagai user WordPress dengan cara klik tombol **Users** pada bar navigasi WordPress.
+
+
+Referensi
+---------
+
+- `"OpenID Connect Generic Client" extension for WordPress <https://oa.dnc.global/spip.php?page=unarticle&id_article=112&lang=en>`_
+- `codecentric repository <https://codecentric.github.io/helm-charts>`_

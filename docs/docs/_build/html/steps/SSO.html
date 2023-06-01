@@ -67,6 +67,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#referensi">Referensi</a></li>
 </ul>
 </li>
 </ul>
@@ -146,7 +147,7 @@
 <p><span class="caption-text">membuat database dan user baru pada MariaDB</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Setelah itu, Cek nama service MariaDB yang sudah diinstal.</p>
+<p>Setelah itu, Cek nama <em>service</em> MariaDB yang sudah diinstal.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>svc
 </pre></div>
 </div>
@@ -245,22 +246,134 @@ Tentu saja ini membuat pengalaman memakai <cite>console</cite> admin akan menjad
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>upgrade<span class="w"> </span>keycloak<span class="w"> </span>codecentric/keycloak<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>--namespace<span class="w"> </span>default
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <cite>service</cite> untuk penginstalan Keycloak. Awalnya kita menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
-upgrade kita dapat menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
+<em>upgrade</em> kita dapat menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
+</div>
 </section>
 <section id="konfigurasi-admin-keycloak">
 <h3>Konfigurasi admin Keycloak<a class="headerlink" href="#konfigurasi-admin-keycloak" title="Permalink to this heading"></a></h3>
+<p>Pada tahap ini, consol admin Keycloak sudah dapat diakses pada <a class="reference external" href="http://34.101.223.88/">http://34.101.223.88/</a>. Jika belum pernah mendaftarkan <em>username</em> dan <em>password</em> maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman log in. Masukkan credential admin untuk masuk ke dashboard.</p>
+<figure class="align-center" id="id10">
+<img alt="../_images/keycloak-image14.png" src="../_images/keycloak-image14.png" />
+<figcaption>
+<p><span class="caption-text">halaman login consol Keycloak</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai login ke WordPress.
+Kita akan menamakan Realm ini dengan nama <code class="docutils literal notranslate"><span class="pre">WordPress</span></code>. Untuk membuat Realm, klik <em>dropdown</em> pada kiri atas bar navigasi dan pilih <strong>Add realm</strong>.</p>
+<figure class="align-center" id="id11">
+<img alt="../_images/keycloak-image6.png" src="../_images/keycloak-image6.png" />
+<figcaption>
+<p><span class="caption-text">membuat Realm <code class="docutils literal notranslate"><span class="pre">WordPress</span></code></span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Setelah membuat Realm, kita harus membuat <em>client</em> dan <em>user</em>. Untuk membuat <em>client</em> pilih <strong>Client</strong> pada bar navigasi. Isi informasi <em>client</em> seperti berikut :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Client ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wordpress</span>
+<span class="nt">Root URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://34.101.65.200</span>
+<span class="nt">Valid Redirect URIs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/*</span>
+<span class="nt">Base URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="nt">Client Protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openid-connect</span>
+<span class="nt">Access Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public</span>
+</pre></div>
+</div>
+<p>Simpan informasi <em>client</em> tersebut. Setelah itu, kita perlu membuat <em>user</em> yang nantinya akan kita pakai untuk login ke consol admin WordPress.
+Untuk membuat <em>user</em> pilih <strong>Users</strong> pada bar navigasi dan klik <strong>Add user</strong>. Isi informasi <em>user</em> seperti berikut :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sendi</span>
+<span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sendisiradj@gmail.com</span>
+<span class="nt">First name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Muhammad Sendi</span>
+<span class="nt">Last name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Siradj</span>
+<span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="nt">Temporary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OFF</span>
+</pre></div>
+</div>
+<p>Jangan lupa untuk mengatur <strong>Temporary : OFF</strong> dikarenakan kita berniat untuk terus memakai <em>password</em> tersebut.</p>
+<p>Konfigurasi admin Keycloak sudah selesai sampai disini.</p>
 </section>
 <section id="instalasi-plugin-openid-connector-pada-wordpress">
 <h3>Instalasi <em>plugin</em> OpenID Connector pada WordPress<a class="headerlink" href="#instalasi-plugin-openid-connector-pada-wordpress" title="Permalink to this heading"></a></h3>
+<p>Pada bagian ini, kita akan menginstal <em>plugin</em> pada WordPress untuk menghubungkan otentikasi dan otorisasi WordPress dengan Keycloak. Jika WordPress di <em>deploy</em> menggunakan lebih dari 1 <em>pod</em> maka pastikan sudah menginstal PVC terlebih dahulu.
+Ini dikarenakan <em>plugin</em> akan disimpan dalam <em>filesystem</em> WordPress sehingga butuh <em>storage</em> yang konsisten agar tidak bermasalah saat kluster berpindah-pindah <em>pods</em>.</p>
+<p>Masuk ke halaman consol admin WordPress melalui <a class="reference external" href="http://34.101.65.200/wp-admin/">http://34.101.65.200/wp-admin/</a> dan masuk menggunakan akun admin WordPress. Akun ini didapatkan ketika pertama kali menginstal WordPress.
+Untuk menginstal plugin, pilih menu <strong>Plugins</strong> dan pilih <strong>Add new</strong> pada bar navigasi consol admin Wordpress. Kemudian cari <em>plugin</em> bernama “OpenID Connect Generic”. Kita juga dapat menginstall <em>plugin</em> dengan cara mengunduh <em>plugin</em> ini melalui :
+<a class="reference external" href="https://wordpress.org/plugins/daggerhart-openid-connect-generic/">https://wordpress.org/plugins/daggerhart-openid-connect-generic/</a></p>
+<figure class="align-center" id="id12">
+<img alt="../_images/keycloak-image16.png" src="../_images/keycloak-image16.png" />
+<figcaption>
+<p><span class="caption-text">bar navigasi consol admin WordPress</span><a class="headerlink" href="#id12" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 </section>
 <section id="konfigurasi-plugin-openid-connector-pada-wordpress">
 <h3>Konfigurasi <em>plugin</em> OpenID Connector pada Wordpress<a class="headerlink" href="#konfigurasi-plugin-openid-connector-pada-wordpress" title="Permalink to this heading"></a></h3>
+<p>Setelah itu tekan tombol <strong>Activate</strong> pada <em>plugin</em> tersebut. Jika sudah, maka kita bisa melihat ada menu tambahan yaitu “OpenID Generic Client” pada <em>section</em> <strong>Settings</strong> di bar navigasi admin.</p>
+<figure class="align-center" id="id13">
+<img alt="../_images/keycloak-image12.png" src="../_images/keycloak-image12.png" />
+<figcaption>
+<p><span class="caption-text">OpenID Connect Client setting</span><a class="headerlink" href="#id13" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Setelah itu isi informasi <em>setting</em> seperti berikut :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Client ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wordpress</span>
+<span class="nt">Scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openid email</span>
+<span class="nt">Endpoint Login URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/auth</span>
+<span class="nt">Endpoint Userinfo URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/userinfo</span>
+<span class="nt">Endpoint Token URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/token</span>
+<span class="nt">Endpoint Logout URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://34.101.223.88/auth/realms/WordPress/protocol/openid-connect/logout</span>
+<span class="nt">Identity Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">preferred_username</span>
+</pre></div>
+</div>
+<p>Informasi <em>endpoint</em> di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian <strong>Realm settings &gt; Endpoints &gt; OpenID Endpoint Configuration</strong>.
+Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perlu mencentang <strong>Link Existing Users</strong> agar <em>user</em> yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan <em>error</em> <strong>User Creation Failed</strong> saat login menggunakan <em>user</em> dari Keycloak.</p>
+<p>Berikut ini adalah gambaran setting untuk <em>plugin</em> OpenID Connector :</p>
+<figure class="align-center" id="id14">
+<img alt="../_images/keycloak-image15.png" src="../_images/keycloak-image15.png" />
+<figcaption>
+<p><span class="caption-text">setting plugin</span><a class="headerlink" href="#id14" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id15">
+<img alt="../_images/keycloak-image2.png" src="../_images/keycloak-image2.png" />
+<figcaption>
+<p><span class="caption-text">aktifkan <strong>Link Existing Users</strong></span><a class="headerlink" href="#id15" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Tekan tombol <strong>Save Changes</strong> jika sudah selesai dengan <em>setting</em>.</p>
 </section>
 </section>
 <section id="skenario-testing">
 <h2>Skenario Testing<a class="headerlink" href="#skenario-testing" title="Permalink to this heading"></a></h2>
-<p>TODO</p>
+<p>Untuk melakukan testing, kita dapat <em>logout</em> dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman <em>login</em>. Saatnya kita menggunakan <em>user</em> yang sudah kita buat di Keycloak pada langkah sebelumnya.</p>
+<figure class="align-center" id="id16">
+<img alt="../_images/keycloak-image1.png" src="../_images/keycloak-image1.png" />
+<figcaption>
+<p><span class="caption-text">login via OpenID Client</span><a class="headerlink" href="#id16" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Pilih tombol <em>Login with OpenID Client</em>.
+<em>Username</em> akun tadi adalah <code class="docutils literal notranslate"><span class="pre">sendi</span></code></p>
+<figure class="align-center" id="id17">
+<img alt="../_images/keycloak-image7.png" src="../_images/keycloak-image7.png" />
+<figcaption>
+<p><span class="caption-text">masuk menggunakan username dan password user Keycloak</span><a class="headerlink" href="#id17" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Voila! kita sudah berhasil <em>login</em> menggunakan <em>user</em> dari Keycloak.</p>
+<figure class="align-center" id="id18">
+<img alt="../_images/keycloak-image11.png" src="../_images/keycloak-image11.png" />
+<figcaption>
+<p><span class="caption-text">halaman dashboard <em>user</em> <code class="docutils literal notranslate"><span class="pre">sendi</span></code></span><a class="headerlink" href="#id18" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Terakhir, pastikan <em>user</em> <code class="docutils literal notranslate"><span class="pre">sendi</span></code> sudah tercatat sebagai user WordPress dengan cara klik tombol <strong>Users</strong> pada bar navigasi WordPress.</p>
+</section>
+<section id="referensi">
+<h2>Referensi<a class="headerlink" href="#referensi" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://oa.dnc.global/spip.php?page=unarticle&amp;id_article=112&amp;lang=en">“OpenID Connect Generic Client” extension for WordPress</a></p></li>
+<li><p><a class="reference external" href="https://codecentric.github.io/helm-charts">codecentric repository</a></p></li>
+</ul>
 </section>
 </section>
 
