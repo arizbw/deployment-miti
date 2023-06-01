@@ -23,7 +23,7 @@ Prerequisites
 -------------
 Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:
 
-- Sudah memiliki `host` database
+- Sudah memiliki *host* database
 - Kluster Kubernetes aktif
 - Wordpress beserta Persistent Volume Claim (PVC) yang sesuai
 
@@ -68,7 +68,7 @@ Setelah itu, Cek nama *service* MariaDB yang sudah diinstal.
 Instalasi *Package Manager* Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helm memudahkan kita untuk melakukan instalasi Keycloak karena Helm sudah melakukan pre-konfigurasi dan Helm juga menyediakan segala dependency yang dibutuhkan untuk menjalankan Keycloak.
-Saya menggunakan Helm chart yang di `mantain` oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan `repository` dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository ``codecentric`` yang isinya adalah `collection` chart Helm.
+Saya menggunakan Helm chart yang di *mantain* oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan *repository* dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository ``codecentric`` yang isinya adalah *collection* chart Helm.
 
 .. code-block:: bash
 
@@ -103,9 +103,9 @@ Kemudian, buat sebuah file yaml bernama ``values.yaml`` untuk chart Keycloak Hel
 
    isi values.yaml
 
-value <External-IP> akan diganti nanti. Untuk saat ini simpan ``values.yaml`` terlebih dahulu.
+value **<External-IP>** akan diganti nanti. Untuk saat ini simpan ``values.yaml`` terlebih dahulu.
 
-Sekarang kita dapat menginstal `chart` Keycloak dengan menggunakan konfigurasi yang sudah disimpan di ``values.yaml``.
+Sekarang kita dapat menginstal *chart* Keycloak dengan menggunakan konfigurasi yang sudah disimpan di ``values.yaml``.
 
 .. code-block:: bash
 
@@ -116,7 +116,7 @@ Sekarang kita dapat menginstal `chart` Keycloak dengan menggunakan konfigurasi y
 
    instal chart Helm
 
-Setelah proses instal selesai, cek apakah `service` Keycloak sudah berjalan.
+Setelah proses instal selesai, cek apakah *service* Keycloak sudah berjalan.
 
 .. code-block:: bash
 
@@ -127,29 +127,29 @@ Setelah proses instal selesai, cek apakah `service` Keycloak sudah berjalan.
 
    daftar `service` yang ada pada `namespace` ``default``
 
-Pada tahap ini, `service` Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan `port-forwarding` terlebih dahulu melalui terminal kluster. Setelah itu, dashboard `console` admin Keycloak bisa dibuka.
-Tentu saja ini membuat pengalaman memakai `console` admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan `expose` agar `console` admin dapat diakses dari luar.
+Pada tahap ini, *service* Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan *port-forwarding* terlebih dahulu melalui terminal kluster. Setelah itu, dashboard `console` admin Keycloak bisa dibuka.
+Tentu saja ini membuat pengalaman memakai *console* admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan *expose* agar *console* admin dapat diakses dari luar.
 
 *Deployment* Keycloak via Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Service` keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan `expose` ke `pod` yang memiliki `service` Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama `pod` yang dipakai adalah ``keycloak-0``. Saya menamakan `service` yang diekspos tersebut ``keycloak-external``.
+*Service* keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan *expose* ke *pod* yang memiliki *service* Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama *pod* yang dipakai adalah ``keycloak-0``. Saya menamakan *service* yang diekspos tersebut ``keycloak-external``.
 
 .. figure:: ../assets/keycloak-images/keycloak-image9.png
    :align: center
 
    expose pod yang mengandung service Keycloak
 
-Kemudian cek apakah `service` ``keycloak-external`` sudah berjalan.
+Kemudian cek apakah *service* ``keycloak-external`` sudah berjalan.
 
 .. figure:: ../assets/keycloak-images/keycloak-image20.png
    :align: center
 
    daftar service pada namespace default
 
-Disini kita mendapatkan `external` IP `service` tersebut adalah 34.101.223.88:80.
+Disini kita mendapatkan *external* IP *service* tersebut adalah 34.101.223.88:80.
 
-Setelah itu buka file ``values.yaml`` dan ganti <External-IP> menjadi `external` IP `service` ``keycloak-external``.
+Setelah itu buka file ``values.yaml`` dan ganti <External-IP> menjadi *external* IP *service* ``keycloak-external``.
 
 .. figure:: ../assets/keycloak-images/keycloak-image18.png
    :align: center
@@ -164,8 +164,8 @@ Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
 
 .. note::
 
-   Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak `service` untuk penginstalan Keycloak. Awalnya kita menggunakan `service` ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
-   *upgrade* kita dapat menggunakan `service` ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
+   Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak *service* untuk penginstalan Keycloak. Awalnya kita menggunakan *service* ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+   *upgrade* kita dapat menggunakan *service* ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
 
 
 
@@ -274,7 +274,7 @@ Tekan tombol **Save Changes** jika sudah selesai dengan *setting*.
 Skenario Testing
 ----------------
 
-Untuk melakukan testing, kita dapat *logout* dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman *login*. Saatnya kita menggunakan *user* yang sudah kita buat di Keycloak pada langkah sebelumnya.
+Untuk melakukan *testing*, kita dapat *logout* dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman *login*. Saatnya kita menggunakan *user* yang sudah kita buat di Keycloak pada langkah sebelumnya.
 
 .. figure:: ../assets/keycloak-images/keycloak-image1.png
    :align: center

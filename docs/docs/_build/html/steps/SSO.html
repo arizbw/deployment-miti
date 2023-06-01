@@ -122,7 +122,7 @@
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
 <p>Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:</p>
 <ul class="simple">
-<li><p>Sudah memiliki <cite>host</cite> database</p></li>
+<li><p>Sudah memiliki <em>host</em> database</p></li>
 <li><p>Kluster Kubernetes aktif</p></li>
 <li><p>Wordpress beserta Persistent Volume Claim (PVC) yang sesuai</p></li>
 </ul>
@@ -161,7 +161,7 @@
 <section id="instalasi-package-manager-helm">
 <h3>Instalasi <em>Package Manager</em> Helm<a class="headerlink" href="#instalasi-package-manager-helm" title="Permalink to this heading"></a></h3>
 <p>Helm memudahkan kita untuk melakukan instalasi Keycloak karena Helm sudah melakukan pre-konfigurasi dan Helm juga menyediakan segala dependency yang dibutuhkan untuk menjalankan Keycloak.
-Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan <cite>repository</cite> dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository <code class="docutils literal notranslate"><span class="pre">codecentric</span></code> yang isinya adalah <cite>collection</cite> chart Helm.</p>
+Saya menggunakan Helm chart yang di <em>mantain</em> oleh Codecentric. Sebelum kita menginstal Helm kita perlu mempersiapkan <em>repository</em> dan file konfigurasi terlebih dahulu. Pertama, kita menambahkan repository <code class="docutils literal notranslate"><span class="pre">codecentric</span></code> yang isinya adalah <em>collection</em> chart Helm.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>codecentric<span class="w"> </span>https://codecentric.github.io/helm-charts
 </pre></div>
 </div>
@@ -194,8 +194,8 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebel
 <p><span class="caption-text">isi values.yaml</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>value &lt;External-IP&gt; akan diganti nanti. Untuk saat ini simpan <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> terlebih dahulu.</p>
-<p>Sekarang kita dapat menginstal <cite>chart</cite> Keycloak dengan menggunakan konfigurasi yang sudah disimpan di <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code>.</p>
+<p>value <strong>&lt;External-IP&gt;</strong> akan diganti nanti. Untuk saat ini simpan <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> terlebih dahulu.</p>
+<p>Sekarang kita dapat menginstal <em>chart</em> Keycloak dengan menggunakan konfigurasi yang sudah disimpan di <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>keycloak<span class="w"> </span>codecentric/keycloak<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>--namespace<span class="w"> </span>default
 </pre></div>
 </div>
@@ -205,7 +205,7 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebel
 <p><span class="caption-text">instal chart Helm</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Setelah proses instal selesai, cek apakah <cite>service</cite> Keycloak sudah berjalan.</p>
+<p>Setelah proses instal selesai, cek apakah <em>service</em> Keycloak sudah berjalan.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>--namespace<span class="w"> </span>default
 </pre></div>
 </div>
@@ -215,27 +215,27 @@ Saya menggunakan Helm chart yang di <cite>mantain</cite> oleh Codecentric. Sebel
 <p><span class="caption-text">daftar <cite>service</cite> yang ada pada <cite>namespace</cite> <code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Pada tahap ini, <cite>service</cite> Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan <cite>port-forwarding</cite> terlebih dahulu melalui terminal kluster. Setelah itu, dashboard <cite>console</cite> admin Keycloak bisa dibuka.
-Tentu saja ini membuat pengalaman memakai <cite>console</cite> admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan <cite>expose</cite> agar <cite>console</cite> admin dapat diakses dari luar.</p>
+<p>Pada tahap ini, <em>service</em> Keycloak sudah dapat dijalankan namun hanya bisa dilakukan di dalam kluser. Artinya kita harus melakukan <em>port-forwarding</em> terlebih dahulu melalui terminal kluster. Setelah itu, dashboard <cite>console</cite> admin Keycloak bisa dibuka.
+Tentu saja ini membuat pengalaman memakai <em>console</em> admin akan menjadi terbatas. Oleh karena itu, kita butuh melakukan <em>expose</em> agar <em>console</em> admin dapat diakses dari luar.</p>
 </section>
 <section id="deployment-keycloak-via-helm">
 <h3><em>Deployment</em> Keycloak via Helm<a class="headerlink" href="#deployment-keycloak-via-helm" title="Permalink to this heading"></a></h3>
-<p><cite>Service</cite> keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan <cite>expose</cite> ke <cite>pod</cite> yang memiliki <cite>service</cite> Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama <cite>pod</cite> yang dipakai adalah <code class="docutils literal notranslate"><span class="pre">keycloak-0</span></code>. Saya menamakan <cite>service</cite> yang diekspos tersebut <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
+<p><em>Service</em> keycloak sudah terdaftar dan berjalan. Selanjutnya kita perlu melakukan <em>expose</em> ke <em>pod</em> yang memiliki <em>service</em> Keycloak yang tadi agar bisa diakses diluar dari kluster. Nama <em>pod</em> yang dipakai adalah <code class="docutils literal notranslate"><span class="pre">keycloak-0</span></code>. Saya menamakan <em>service</em> yang diekspos tersebut <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
 <figure class="align-center" id="id7">
 <img alt="../_images/keycloak-image9.png" src="../_images/keycloak-image9.png" />
 <figcaption>
 <p><span class="caption-text">expose pod yang mengandung service Keycloak</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Kemudian cek apakah <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> sudah berjalan.</p>
+<p>Kemudian cek apakah <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> sudah berjalan.</p>
 <figure class="align-center" id="id8">
 <img alt="../_images/keycloak-image20.png" src="../_images/keycloak-image20.png" />
 <figcaption>
 <p><span class="caption-text">daftar service pada namespace default</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Disini kita mendapatkan <cite>external</cite> IP <cite>service</cite> tersebut adalah 34.101.223.88:80.</p>
-<p>Setelah itu buka file <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> dan ganti &lt;External-IP&gt; menjadi <cite>external</cite> IP <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
+<p>Disini kita mendapatkan <em>external</em> IP <em>service</em> tersebut adalah 34.101.223.88:80.</p>
+<p>Setelah itu buka file <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> dan ganti &lt;External-IP&gt; menjadi <em>external</em> IP <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
 <figure class="align-center" id="id9">
 <img alt="../_images/keycloak-image18.png" src="../_images/keycloak-image18.png" />
 <figcaption>
@@ -248,8 +248,8 @@ Tentu saja ini membuat pengalaman memakai <cite>console</cite> admin akan menjad
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <cite>service</cite> untuk penginstalan Keycloak. Awalnya kita menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
-<em>upgrade</em> kita dapat menggunakan <cite>service</cite> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
+<p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <em>service</em> untuk penginstalan Keycloak. Awalnya kita menggunakan <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+<em>upgrade</em> kita dapat menggunakan <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
 </div>
 </section>
 <section id="konfigurasi-admin-keycloak">
@@ -344,7 +344,7 @@ Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perl
 </section>
 <section id="skenario-testing">
 <h2>Skenario Testing<a class="headerlink" href="#skenario-testing" title="Permalink to this heading"></a></h2>
-<p>Untuk melakukan testing, kita dapat <em>logout</em> dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman <em>login</em>. Saatnya kita menggunakan <em>user</em> yang sudah kita buat di Keycloak pada langkah sebelumnya.</p>
+<p>Untuk melakukan <em>testing</em>, kita dapat <em>logout</em> dari consol admin WordPress. Setelah itu kita akan diarahkan ke halaman <em>login</em>. Saatnya kita menggunakan <em>user</em> yang sudah kita buat di Keycloak pada langkah sebelumnya.</p>
 <figure class="align-center" id="id16">
 <img alt="../_images/keycloak-image1.png" src="../_images/keycloak-image1.png" />
 <figcaption>
