@@ -147,7 +147,7 @@ Kemudian cek apakah *service* ``keycloak-external`` sudah berjalan.
 
    daftar service pada namespace default
 
-Disini kita mendapatkan *external* IP *service* tersebut adalah 34.101.223.88:80.
+Disini kita mendapatkan *external* IP *service* tersebut adalah ``34.101.223.88:80``.
 
 Setelah itu buka file ``values.yaml`` dan ganti <External-IP> menjadi *external* IP *service* ``keycloak-external``.
 
@@ -156,7 +156,7 @@ Setelah itu buka file ``values.yaml`` dan ganti <External-IP> menjadi *external*
 
    update external IP pada ``values.yaml``
 
-Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
+Terakhir lakukan perintah Helm *upgrade* untuk menerapkan perubahan.
 
 .. code-block:: bash
 

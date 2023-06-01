@@ -234,7 +234,7 @@ Tentu saja ini membuat pengalaman memakai <em>console</em> admin akan menjadi te
 <p><span class="caption-text">daftar service pada namespace default</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Disini kita mendapatkan <em>external</em> IP <em>service</em> tersebut adalah 34.101.223.88:80.</p>
+<p>Disini kita mendapatkan <em>external</em> IP <em>service</em> tersebut adalah <code class="docutils literal notranslate"><span class="pre">34.101.223.88:80</span></code>.</p>
 <p>Setelah itu buka file <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> dan ganti &lt;External-IP&gt; menjadi <em>external</em> IP <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code>.</p>
 <figure class="align-center" id="id9">
 <img alt="../_images/keycloak-image18.png" src="../_images/keycloak-image18.png" />
@@ -242,7 +242,7 @@ Tentu saja ini membuat pengalaman memakai <em>console</em> admin akan menjadi te
 <p><span class="caption-text">update external IP pada <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code></span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.</p>
+<p>Terakhir lakukan perintah Helm <em>upgrade</em> untuk menerapkan perubahan.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>upgrade<span class="w"> </span>keycloak<span class="w"> </span>codecentric/keycloak<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>--namespace<span class="w"> </span>default
 </pre></div>
 </div>
