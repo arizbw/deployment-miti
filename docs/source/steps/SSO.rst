@@ -215,7 +215,7 @@ Jangan lupa untuk mengatur **Temporary : OFF** dikarenakan kita berniat untuk te
 
 Konfigurasi admin Keycloak sudah selesai sampai disini.
 
-Instalasi *plugin* OpenID Connector pada WordPress
+Instalasi *plugin* OpenID Connect pada WordPress
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pada bagian ini, kita akan menginstal *plugin* pada WordPress untuk menghubungkan otentikasi dan otorisasi WordPress dengan Keycloak. Jika WordPress di *deploy* menggunakan lebih dari 1 *pod* maka pastikan sudah menginstal PVC terlebih dahulu.
@@ -230,7 +230,7 @@ https://wordpress.org/plugins/daggerhart-openid-connect-generic/
 
    bar navigasi consol admin WordPress
 
-Konfigurasi *plugin* OpenID Connector pada Wordpress
+Konfigurasi *plugin* OpenID Connect pada Wordpress
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Setelah itu tekan tombol **Activate** pada *plugin* tersebut. Jika sudah, maka kita bisa melihat ada menu tambahan yaitu "OpenID Generic Client" pada *section* **Settings** di bar navigasi admin.
@@ -255,7 +255,7 @@ Setelah itu isi informasi *setting* seperti berikut :
 Informasi *endpoint* di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian **Realm settings > Endpoints > OpenID Endpoint Configuration**.
 Kemudian pada *section* **WordPress User Setting** kita perlu mencentang **Link Existing Users** agar *user* yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan *error* **User Creation Failed** saat *login* menggunakan *user* dari Keycloak.
 
-Berikut ini adalah gambaran setting untuk *plugin* OpenID Connector :
+Berikut ini adalah gambaran setting untuk *plugin* OpenID connect :
 
 .. figure:: ../assets/keycloak-images/keycloak-image15.png
    :align: center

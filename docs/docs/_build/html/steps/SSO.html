@@ -62,8 +62,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#instalasi-package-manager-helm">Instalasi <em>Package Manager</em> Helm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deployment-keycloak-via-helm"><em>Deployment</em> Keycloak via Helm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#konfigurasi-admin-keycloak">Konfigurasi admin Keycloak</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#instalasi-plugin-openid-connector-pada-wordpress">Instalasi <em>plugin</em> OpenID Connector pada WordPress</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#konfigurasi-plugin-openid-connector-pada-wordpress">Konfigurasi <em>plugin</em> OpenID Connector pada Wordpress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instalasi-plugin-openid-connect-pada-wordpress">Instalasi <em>plugin</em> OpenID Connect pada WordPress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#konfigurasi-plugin-openid-connect-pada-wordpress">Konfigurasi <em>plugin</em> OpenID Connect pada Wordpress</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a></li>
@@ -291,8 +291,8 @@ Untuk membuat <em>user</em> pilih <strong>Users</strong> pada bar navigasi dan k
 <p>Jangan lupa untuk mengatur <strong>Temporary : OFF</strong> dikarenakan kita berniat untuk terus memakai <em>password</em> tersebut.</p>
 <p>Konfigurasi admin Keycloak sudah selesai sampai disini.</p>
 </section>
-<section id="instalasi-plugin-openid-connector-pada-wordpress">
-<h3>Instalasi <em>plugin</em> OpenID Connector pada WordPress<a class="headerlink" href="#instalasi-plugin-openid-connector-pada-wordpress" title="Permalink to this heading"></a></h3>
+<section id="instalasi-plugin-openid-connect-pada-wordpress">
+<h3>Instalasi <em>plugin</em> OpenID Connect pada WordPress<a class="headerlink" href="#instalasi-plugin-openid-connect-pada-wordpress" title="Permalink to this heading"></a></h3>
 <p>Pada bagian ini, kita akan menginstal <em>plugin</em> pada WordPress untuk menghubungkan otentikasi dan otorisasi WordPress dengan Keycloak. Jika WordPress di <em>deploy</em> menggunakan lebih dari 1 <em>pod</em> maka pastikan sudah menginstal PVC terlebih dahulu.
 Ini dikarenakan <em>plugin</em> akan disimpan dalam <em>filesystem</em> WordPress sehingga butuh <em>storage</em> yang konsisten agar tidak bermasalah saat kluster berpindah-pindah <em>pods</em>.</p>
 <p>Masuk ke halaman consol admin WordPress melalui <a class="reference external" href="http://34.101.65.200/wp-admin/">http://34.101.65.200/wp-admin/</a> dan masuk menggunakan akun admin WordPress. Akun ini didapatkan ketika pertama kali menginstal WordPress.
@@ -305,8 +305,8 @@ Untuk menginstal plugin, pilih menu <strong>Plugins</strong> dan pilih <strong>A
 </figcaption>
 </figure>
 </section>
-<section id="konfigurasi-plugin-openid-connector-pada-wordpress">
-<h3>Konfigurasi <em>plugin</em> OpenID Connector pada Wordpress<a class="headerlink" href="#konfigurasi-plugin-openid-connector-pada-wordpress" title="Permalink to this heading"></a></h3>
+<section id="konfigurasi-plugin-openid-connect-pada-wordpress">
+<h3>Konfigurasi <em>plugin</em> OpenID Connect pada Wordpress<a class="headerlink" href="#konfigurasi-plugin-openid-connect-pada-wordpress" title="Permalink to this heading"></a></h3>
 <p>Setelah itu tekan tombol <strong>Activate</strong> pada <em>plugin</em> tersebut. Jika sudah, maka kita bisa melihat ada menu tambahan yaitu “OpenID Generic Client” pada <em>section</em> <strong>Settings</strong> di bar navigasi admin.</p>
 <figure class="align-center" id="id13">
 <img alt="../_images/keycloak-image12.png" src="../_images/keycloak-image12.png" />
@@ -326,7 +326,7 @@ Untuk menginstal plugin, pilih menu <strong>Plugins</strong> dan pilih <strong>A
 </div>
 <p>Informasi <em>endpoint</em> di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian <strong>Realm settings &gt; Endpoints &gt; OpenID Endpoint Configuration</strong>.
 Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perlu mencentang <strong>Link Existing Users</strong> agar <em>user</em> yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan <em>error</em> <strong>User Creation Failed</strong> saat <em>login</em> menggunakan <em>user</em> dari Keycloak.</p>
-<p>Berikut ini adalah gambaran setting untuk <em>plugin</em> OpenID Connector :</p>
+<p>Berikut ini adalah gambaran setting untuk <em>plugin</em> OpenID connect :</p>
 <figure class="align-center" id="id14">
 <img alt="../_images/keycloak-image15.png" src="../_images/keycloak-image15.png" />
 <figcaption>
