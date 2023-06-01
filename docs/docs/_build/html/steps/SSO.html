@@ -261,7 +261,7 @@ Tentu saja ini membuat pengalaman memakai <em>console</em> admin akan menjadi te
 <p><span class="caption-text">halaman login consol Keycloak</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<p>Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai login ke WordPress.
+<p>Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai <em>login</em> ke WordPress.
 Kita akan menamakan Realm ini dengan nama <code class="docutils literal notranslate"><span class="pre">WordPress</span></code>. Untuk membuat Realm, klik <em>dropdown</em> pada kiri atas bar navigasi dan pilih <strong>Add realm</strong>.</p>
 <figure class="align-center" id="id11">
 <img alt="../_images/keycloak-image6.png" src="../_images/keycloak-image6.png" />
@@ -278,7 +278,7 @@ Kita akan menamakan Realm ini dengan nama <code class="docutils literal notransl
 <span class="nt">Access Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public</span>
 </pre></div>
 </div>
-<p>Simpan informasi <em>client</em> tersebut. Setelah itu, kita perlu membuat <em>user</em> yang nantinya akan kita pakai untuk login ke consol admin WordPress.
+<p>Simpan informasi <em>client</em> tersebut. Setelah itu, kita perlu membuat <em>user</em> yang nantinya akan kita pakai untuk <em>login</em> ke consol admin WordPress.
 Untuk membuat <em>user</em> pilih <strong>Users</strong> pada bar navigasi dan klik <strong>Add user</strong>. Isi informasi <em>user</em> seperti berikut :</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sendi</span>
 <span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sendisiradj@gmail.com</span>
@@ -325,7 +325,7 @@ Untuk menginstal plugin, pilih menu <strong>Plugins</strong> dan pilih <strong>A
 </pre></div>
 </div>
 <p>Informasi <em>endpoint</em> di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian <strong>Realm settings &gt; Endpoints &gt; OpenID Endpoint Configuration</strong>.
-Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perlu mencentang <strong>Link Existing Users</strong> agar <em>user</em> yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan <em>error</em> <strong>User Creation Failed</strong> saat login menggunakan <em>user</em> dari Keycloak.</p>
+Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perlu mencentang <strong>Link Existing Users</strong> agar <em>user</em> yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan <em>error</em> <strong>User Creation Failed</strong> saat <em>login</em> menggunakan <em>user</em> dari Keycloak.</p>
 <p>Berikut ini adalah gambaran setting untuk <em>plugin</em> OpenID Connector :</p>
 <figure class="align-center" id="id14">
 <img alt="../_images/keycloak-image15.png" src="../_images/keycloak-image15.png" />

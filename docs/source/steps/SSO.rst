@@ -179,7 +179,7 @@ Pada tahap ini, consol admin Keycloak sudah dapat diakses pada http://34.101.223
 
    halaman login consol Keycloak
 
-Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai login ke WordPress.
+Kita butuh untuk membuat Realm baru khusus untuk aplikasi WordPress. Realm merupakan administrasi top-level untuk otentikasi dan otorisasi pada Keycloak. Dengan membuat Realm maka kita dapat memastikan manajemen user, konfigurasi SSO, dan integrasi penyedia identitas eksternal berada dalam satu tempat. Contoh, kita dapat membuat satu akun user di Keycloak yang nantinya dapat dipakai *login* ke WordPress.
 Kita akan menamakan Realm ini dengan nama ``WordPress``. Untuk membuat Realm, klik *dropdown* pada kiri atas bar navigasi dan pilih **Add realm**.
 
 .. figure:: ../assets/keycloak-images/keycloak-image6.png
@@ -198,7 +198,7 @@ Setelah membuat Realm, kita harus membuat *client* dan *user*. Untuk membuat *cl
    Client Protocol: openid-connect
    Access Type: public
 
-Simpan informasi *client* tersebut. Setelah itu, kita perlu membuat *user* yang nantinya akan kita pakai untuk login ke consol admin WordPress.
+Simpan informasi *client* tersebut. Setelah itu, kita perlu membuat *user* yang nantinya akan kita pakai untuk *login* ke consol admin WordPress.
 Untuk membuat *user* pilih **Users** pada bar navigasi dan klik **Add user**. Isi informasi *user* seperti berikut :
 
 .. code-block:: yaml
@@ -253,7 +253,7 @@ Setelah itu isi informasi *setting* seperti berikut :
    Identity Key: preferred_username
 
 Informasi *endpoint* di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian **Realm settings > Endpoints > OpenID Endpoint Configuration**.
-Kemudian pada *section* **WordPress User Setting** kita perlu mencentang **Link Existing Users** agar *user* yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan *error* **User Creation Failed** saat login menggunakan *user* dari Keycloak.
+Kemudian pada *section* **WordPress User Setting** kita perlu mencentang **Link Existing Users** agar *user* yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan *error* **User Creation Failed** saat *login* menggunakan *user* dari Keycloak.
 
 Berikut ini adalah gambaran setting untuk *plugin* OpenID Connector :
 
