@@ -129,7 +129,7 @@
 </section>
 <section id="proses-instalasi">
 <h2>Proses Instalasi<a class="headerlink" href="#proses-instalasi" title="Permalink to this heading"></a></h2>
-<p>Pemasangan fitur SSO pada kluster ini setidaknya memiliki 5 langkah utama, yaitu mulai dari mempersiapkan <em>database</em>, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, dan terakhir konfigurasi WordPress.</p>
+<p>Pemasangan fitur SSO pada kluster ini setidaknya memiliki 6 langkah utama, yaitu mulai dari mempersiapkan <em>database</em>, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, instalasi <em>plugin</em> OpenID Connect, dan terakhir konfigurasi <em>plugin</em> WordPress.</p>
 <p>Deployment Keycloak kami luncurkan sebagai sebuah service tersendiri dan memiliki external IP yang dapat diakses melalui <a class="reference external" href="http://34.101.223.88">http://34.101.223.88</a> . Semua <em>resource</em> yang dipasang untuk deployment Keycloak berada pada <em>namespace</em> “default”.</p>
 <p>Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SSO menggunakan Keycloak :</p>
 <section id="mempersiapkan-database-keycloak">
@@ -326,7 +326,7 @@ Untuk menginstal plugin, pilih menu <strong>Plugins</strong> dan pilih <strong>A
 </div>
 <p>Informasi <em>endpoint</em> di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian <strong>Realm settings &gt; Endpoints &gt; OpenID Endpoint Configuration</strong>.
 Kemudian pada <em>section</em> <strong>WordPress User Setting</strong> kita perlu mencentang <strong>Link Existing Users</strong> agar <em>user</em> yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan <em>error</em> <strong>User Creation Failed</strong> saat <em>login</em> menggunakan <em>user</em> dari Keycloak.</p>
-<p>Berikut ini adalah gambaran setting untuk <em>plugin</em> OpenID connect :</p>
+<p>Berikut ini adalah gambaran <em>setting</em> untuk <em>plugin</em> OpenID Connect :</p>
 <figure class="align-center" id="id14">
 <img alt="../_images/keycloak-image15.png" src="../_images/keycloak-image15.png" />
 <figcaption>

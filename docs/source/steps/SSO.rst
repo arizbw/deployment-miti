@@ -32,7 +32,7 @@ Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal beri
 
 Proses Instalasi
 ----------------
-Pemasangan fitur SSO pada kluster ini setidaknya memiliki 5 langkah utama, yaitu mulai dari mempersiapkan *database*, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, dan terakhir konfigurasi WordPress.
+Pemasangan fitur SSO pada kluster ini setidaknya memiliki 6 langkah utama, yaitu mulai dari mempersiapkan *database*, instalasi Helm, instalasi Keycloak, konfigurasi Keycloak, instalasi *plugin* OpenID Connect, dan terakhir konfigurasi *plugin* WordPress.
 
 Deployment Keycloak kami luncurkan sebagai sebuah service tersendiri dan memiliki external IP yang dapat diakses melalui http://34.101.223.88 . Semua *resource* yang dipasang untuk deployment Keycloak berada pada *namespace* "default".
 
@@ -255,7 +255,7 @@ Setelah itu isi informasi *setting* seperti berikut :
 Informasi *endpoint* di atas juga bisa didapatkan melalui consol admin Keycloak pada bagian **Realm settings > Endpoints > OpenID Endpoint Configuration**.
 Kemudian pada *section* **WordPress User Setting** kita perlu mencentang **Link Existing Users** agar *user* yang sudah kita buat di Keycloak dapat masuk ke WordPress. Jika tidak maka WordPress akan mengembalikan *error* **User Creation Failed** saat *login* menggunakan *user* dari Keycloak.
 
-Berikut ini adalah gambaran setting untuk *plugin* OpenID connect :
+Berikut ini adalah gambaran *setting* untuk *plugin* OpenID Connect :
 
 .. figure:: ../assets/keycloak-images/keycloak-image15.png
    :align: center
