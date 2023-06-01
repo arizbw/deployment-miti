@@ -17,7 +17,7 @@ Aplikasi integrasi SSO yang digunakan dalam tugas ini adalah Keycloak. Kami memi
 
 Pada proses instalasi Keycloak, kami menggunakan Helm sebagai *package manager* untuk menginstall dan mengelola aplikasi di dalam cluster Kubernetes kami. Helm memungkinkan kami untuk dengan mudah mendefinisikan dan menyebarkan konfigurasi Keycloak serta komponen-komponen terkaitnya dalam lingkungan Kubernetes. Selain itu, Helm juga memungkinkan kami untuk melakukan *upgrade* dan *rollback* secara mudah serta memastikan bahwa kami memiliki versi Keycloak yang konsisten.
 
-Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses *authentication* atau *log in* dapat menggunakan akun Keycloak yang sudah di *define* di konfigurasi *console* Keycloak.
+Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses *authentication* atau *login* dapat menggunakan akun Keycloak yang sudah di *define* di konfigurasi *console* Keycloak.
 
 Prerequisites
 -------------
@@ -40,7 +40,7 @@ Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SS
 
 Mempersiapkan *Database* Keycloak
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user Keycloak di dalam host tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
+Pada kluster ini sudah terinstal *host* database dari MariaDB. Saya hanya perlu membuat database dan *user* Keycloak di dalam *host* tersebut. Masuk ke dalam *console* MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :
 
 .. code-block:: sql
 
@@ -164,17 +164,15 @@ Terakhir lakukan perintah Helm upgrade untuk menerapkan perubahan.
 
 .. note::
 
-   Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak *service* untuk penginstalan Keycloak. Awalnya kita menggunakan *service* ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+   Catatan tambahan, karena kita menggunakan Helm maka kita dapat  menggunakan banyak *service* untuk penginstalan Keycloak dengan mudah. Awalnya kita menggunakan *service* ``keycloak-http`` untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
    *upgrade* kita dapat menggunakan *service* ``keycloak-external`` untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.
-
-
 
 
 
 Konfigurasi admin Keycloak
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pada tahap ini, consol admin Keycloak sudah dapat diakses pada http://34.101.223.88/. Jika belum pernah mendaftarkan *username* dan *password* maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman log in. Masukkan credential admin untuk masuk ke dashboard.
+Pada tahap ini, consol admin Keycloak sudah dapat diakses pada http://34.101.223.88/. Jika belum pernah mendaftarkan *username* dan *password* maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman *login*. Masukkan credential admin untuk masuk ke dashboard.
 
 .. figure:: ../assets/keycloak-images/keycloak-image14.png
    :align: center

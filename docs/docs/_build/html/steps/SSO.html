@@ -117,7 +117,7 @@
 </table>
 <p>Aplikasi integrasi SSO yang digunakan dalam tugas ini adalah Keycloak. Kami memilih Keycloak karena merupakan solusi <em>open-source</em> yang paling sering digunakan dan relatif mudah digunakan. Dengan Keycloak, kami dapat membuat 2 jenis protokol untuk authorization yaitu OpenID atau SAML 2.0. Namun untuk instalasi pada kali ini, kami memilih protokol OpenID yang akan diterapkan.</p>
 <p>Pada proses instalasi Keycloak, kami menggunakan Helm sebagai <em>package manager</em> untuk menginstall dan mengelola aplikasi di dalam cluster Kubernetes kami. Helm memungkinkan kami untuk dengan mudah mendefinisikan dan menyebarkan konfigurasi Keycloak serta komponen-komponen terkaitnya dalam lingkungan Kubernetes. Selain itu, Helm juga memungkinkan kami untuk melakukan <em>upgrade</em> dan <em>rollback</em> secara mudah serta memastikan bahwa kami memiliki versi Keycloak yang konsisten.</p>
-<p>Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses <em>authentication</em> atau <em>log in</em> dapat menggunakan akun Keycloak yang sudah di <em>define</em> di konfigurasi <em>console</em> Keycloak.</p>
+<p>Setelah itu kami akan mengintegrasikan aplikasi Wordpress yang sudah dipasang sebelumnya agar proses <em>authentication</em> atau <em>login</em> dapat menggunakan akun Keycloak yang sudah di <em>define</em> di konfigurasi <em>console</em> Keycloak.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
 <p>Instalasi Keycloak dapat dilakukan jika kluster sudah memenuhi beberapa hal berikut:</p>
@@ -134,7 +134,7 @@
 <p>Berikut ini adalah detail dari langkah-langkah yang dilakukan untuk instalasi SSO menggunakan Keycloak :</p>
 <section id="mempersiapkan-database-keycloak">
 <h3>Mempersiapkan <em>Database</em> Keycloak<a class="headerlink" href="#mempersiapkan-database-keycloak" title="Permalink to this heading"></a></h3>
-<p>Pada kluster ini sudah terinstall host database dari MariaDB. Saya hanya perlu membuat database dan user Keycloak di dalam host tersebut. Masuk ke dalam <em>console</em> MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :</p>
+<p>Pada kluster ini sudah terinstal <em>host</em> database dari MariaDB. Saya hanya perlu membuat database dan <em>user</em> Keycloak di dalam <em>host</em> tersebut. Masuk ke dalam <em>console</em> MariaDB melalui terminal dan sambungkan MariaDB dengan menjalankan perintah :</p>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">keycloak</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">keycloak</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;keycloak&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">;</span>
 <span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
@@ -248,13 +248,13 @@ Tentu saja ini membuat pengalaman memakai <em>console</em> admin akan menjadi te
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat dengan mudah menggunakan banyak <em>service</em> untuk penginstalan Keycloak. Awalnya kita menggunakan <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
+<p>Catatan tambahan, karena kita menggunakan Helm maka kita dapat  menggunakan banyak <em>service</em> untuk penginstalan Keycloak dengan mudah. Awalnya kita menggunakan <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-http</span></code> untuk menjalankan Keycloak di dalam kluster. Namun setelah melakukan
 <em>upgrade</em> kita dapat menggunakan <em>service</em> <code class="docutils literal notranslate"><span class="pre">keycloak-external</span></code> untuk mengakses Keycloak dari luar. Ini juga menjadi salah satu keuntungan dari Helm.</p>
 </div>
 </section>
 <section id="konfigurasi-admin-keycloak">
 <h3>Konfigurasi admin Keycloak<a class="headerlink" href="#konfigurasi-admin-keycloak" title="Permalink to this heading"></a></h3>
-<p>Pada tahap ini, consol admin Keycloak sudah dapat diakses pada <a class="reference external" href="http://34.101.223.88/">http://34.101.223.88/</a>. Jika belum pernah mendaftarkan <em>username</em> dan <em>password</em> maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman log in. Masukkan credential admin untuk masuk ke dashboard.</p>
+<p>Pada tahap ini, consol admin Keycloak sudah dapat diakses pada <a class="reference external" href="http://34.101.223.88/">http://34.101.223.88/</a>. Jika belum pernah mendaftarkan <em>username</em> dan <em>password</em> maka akan muncul halaman pendaftaran, jika sudah maka tampilan nya berubah menjadi halaman <em>login</em>. Masukkan credential admin untuk masuk ke dashboard.</p>
 <figure class="align-center" id="id10">
 <img alt="../_images/keycloak-image14.png" src="../_images/keycloak-image14.png" />
 <figcaption>
