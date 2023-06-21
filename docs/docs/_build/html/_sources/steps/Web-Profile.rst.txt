@@ -5,19 +5,27 @@ Web Profile
    :align: center
 
    +----------------------+------------------------------------------------------------------+
-   |**Person in charge**  | Name `@username <https://github.com/username>`_                  |
+   |**Person in charge**  | Eyota Wakanda `@eyotawakanda https://github.com/eyotawakanda`_   |
    +----------------------+------------------------------------------------------------------+
-   |**Service**           | <service name>                                                   |
+   |**Service**           | Web Profile                                                      |
    +----------------------+------------------------------------------------------------------+
-   |**Aplikasi**          | <application used>                                               |
+   |**Aplikasi**          | WordPress                                                        |
    +----------------------+------------------------------------------------------------------+
 
-*Brief descriptions*
+Aplikasi untuk Web Profile yang digunakan untuk tugas ini adalah WordPress. Kami memilih WordPress karena aplikasi WordPress merupakan aplikasi paling sederhana yang dapat digunakan untuk memenuhi kebutuhan dari tugas ini.
+
+Berikut adalah langkah-langkah instalasi Wordpress
 
 Proses Instalasi
 ----------------
 
-TODO
+Langkah pertama yang butuh dilakukan adalah membuat file .yaml sesuai dengan kebutuhan
+
+Berikut adalah contoh file .yaml yang digunakan untuk membuat web profile sederhana
+
+
+
+
 
 Skenario Testing
 ----------------
