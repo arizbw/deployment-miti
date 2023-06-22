@@ -53,6 +53,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Web Profile</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#proses-instalasi">Proses Instalasi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#menggunakan-file-yaml">Menggunakan File .yaml</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a></li>
 </ul>
 </li>
@@ -111,6 +112,18 @@
 <h2>Proses Instalasi<a class="headerlink" href="#proses-instalasi" title="Permalink to this heading"></a></h2>
 <p>Langkah pertama yang butuh dilakukan adalah membuat file .yaml sesuai dengan kebutuhan</p>
 <p>Berikut adalah contoh file .yaml yang digunakan untuk membuat web profile sederhana</p>
+<figure class="align-center">
+<img alt="../_images/webprofile1.png" src="../_images/webprofile1.png" />
+</figure>
+<p>Dari .yaml file di atas, beberapa bagian yang harus diubah adalah jumlah replica dan env. Jumlah replica bisa di atur berdasarkan keinginan. Env akan diatur untuk menyesuaikan dengan database yang disiapkan.</p>
+<p>.yaml yang diberikan merupakan gabungan dari .yaml deployment dan .yaml service. Hasil yang sama bisa dicapai dengan membuat 2 .yaml file terpisah.</p>
+</section>
+<section id="menggunakan-file-yaml">
+<h2>Menggunakan File .yaml<a class="headerlink" href="#menggunakan-file-yaml" title="Permalink to this heading"></a></h2>
+<p>Untuk melakukan perubahan pada cluster, bisa digunakan command berikut pada GCloud Console</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>&lt;nama-file-yaml&gt;.yaml
+</pre></div>
+</div>
 </section>
 <section id="skenario-testing">
 <h2>Skenario Testing<a class="headerlink" href="#skenario-testing" title="Permalink to this heading"></a></h2>
