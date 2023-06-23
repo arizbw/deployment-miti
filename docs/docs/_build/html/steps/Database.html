@@ -55,7 +55,11 @@
 <li class="toctree-l1"><a class="reference internal" href="E-Commerce.html">E-Commerce</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#proses-instalasi">Proses Instalasi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#akses-lokal">Akses lokal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#akses-external">Akses external</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Monitoring.html">Monitoring</a></li>
@@ -95,24 +99,79 @@
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td><p><strong>Person in charge</strong></p></td>
-<td><p>Name <a class="reference external" href="https://github.com/username">&#64;username</a></p></td>
+<td><p>Hanif Omar Kertapati <a class="reference external" href="https://github.com/hanif-omar-k">https://github.com/hanif-omar-k</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Service</strong></p></td>
-<td><p>&lt;service name&gt;</p></td>
+<td><p>Database</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Aplikasi</strong></p></td>
-<td><p>&lt;application used&gt;</p></td>
+<td><p>MariaDB</p></td>
 </tr>
 </tbody>
 </table>
-<p><em>Brief descriptions</em></p>
+<p>Aplikasi database yang kami gunakan untuk project ini adalah MariaDB, Sebuah fork open source dari MySql. MariaDB digunakan karena gabungan dari kompabilitasnya dengan aplikasi menggunakan mysql sebagai drop in replacement dan simplisitasnya dalam install</p>
+<p>Lebih tepatnya, versi MariaDB yang digunakan menggunakan install Google Cloud Engine marketplace click to deploy.</p>
 <section id="proses-instalasi">
 <h2>Proses Instalasi<a class="headerlink" href="#proses-instalasi" title="Permalink to this heading"></a></h2>
-<p>TODO</p>
+<p>Untuk memulai, pastikan bahwa kita berada di cluster <code class="docutils literal notranslate"><span class="pre">ta-final</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>ta-final<span class="w"> </span>--zone<span class="w"> </span>asia-southeast2-a<span class="w"> </span>--project<span class="w"> </span>miti-ta2
+</pre></div>
+</div>
+<p>Navigasi ke halaman marketplace mariadb untuk kubernetes</p>
+<figure class="align-center">
+<img alt="../_images/database2023-06-09%20093502.png" src="../_images/database2023-06-09%20093502.png" />
+</figure>
+<p>Dan configure secara default dalam cluster utama</p>
+<figure class="align-center">
+<img alt="../_images/database22023-06-09094128.png" src="../_images/database22023-06-09094128.png" />
+</figure>
+<p>Setelah menunggu beberapa saat, MariaDB akan terinstall dalam cluster. ini dapat dicek dalam tab kubernetes–applications–mariadb untuk mengecek user root, password, dan service</p>
+<figure class="align-center">
+<img alt="../_images/database32023-06-09%20094809.png" src="../_images/database32023-06-09%20094809.png" />
+</figure>
 </section>
 <section id="skenario-testing">
 <h2>Skenario Testing<a class="headerlink" href="#skenario-testing" title="Permalink to this heading"></a></h2>
-<p>TODO</p>
+<p>Seksi Testing ini akan digunakan untuk cara mengakses database</p>
+<p>Pertama, connect kedalam kluster utama</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>ta-final<span class="w"> </span>--zone<span class="w"> </span>asia-southeast2-a<span class="w"> </span>--project<span class="w"> </span>miti-ta2
+</pre></div>
+</div>
+<section id="akses-lokal">
+<h3>Akses lokal<a class="headerlink" href="#akses-lokal" title="Permalink to this heading"></a></h3>
+<p>Untuk mengakses server mariadb secara lokal</p>
+<p>dengan  $MARIADB_ROOT_PASSWORD sebagai root password dalam page application mariadb</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>mariadb-1-mariadb-0<span class="w"> </span>--namespace<span class="w"> </span>default<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span>mariadb-1-mariadb<span class="w"> </span>-p<span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$MARIADB_ROOT_PASSWORD</span><span class="k">)</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<img alt="../_images/database4.png" src="../_images/database4.png" />
+</figure>
+</section>
+<section id="akses-external">
+<h3>Akses external<a class="headerlink" href="#akses-external" title="Permalink to this heading"></a></h3>
+<p>Untuk testing akses external, akan digunakan DBvisualizer sebagai DBMS untuk testing</p>
+<p>Untuk mengakses database secara external, service akan di expose melewati load balancer yang di-patch dalam service tersebut</p>
+<p>$APP_INSTANCE_NAME sebagai mariadb-1
+$NAMESPACE sebagai default</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>patch<span class="w"> </span>svc<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$APP_INSTANCE_NAME</span><span class="s2">-mariadb&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$APP_INSTANCE_NAME</span><span class="s2">-mariadb-secondary&quot;</span><span class="w"> </span><span class="se">\</span>
+--namespace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NAMESPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--patch<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;: {&quot;type&quot;: &quot;LoadBalancer&quot;}}&#39;</span>
+</pre></div>
+</div>
+<p>Lalu, dapat ditunjukkan ip main untuk penggunaan external</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PRIMARY_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span><span class="nv">$APP_INSTANCE_NAME</span>-mariadb<span class="w"> </span><span class="se">\</span>
+--namespace<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span><span class="se">\</span>
+--output<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PRIMARY_IP</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Data ini, kemudian dapat digunakan dalam DBMS bersama dengan data dari halaman application</p>
+<figure class="align-center">
+<img alt="../_images/database5.png" src="../_images/database5.png" />
+</figure>
+<p>Kemudian, database siap untuk dipakai.</p>
+</section>
 </section>
 </section>
 

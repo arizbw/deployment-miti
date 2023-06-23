@@ -54,7 +54,6 @@
 <li class="toctree-l1"><a class="reference internal" href="Web-Profile.html">Web Profile</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">E-Commerce</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#proses-instalasi">Proses Instalasi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#skenario-testing">Skenario Testing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Database.html">Database</a></li>
@@ -95,24 +94,149 @@
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td><p><strong>Person in charge</strong></p></td>
-<td><p>Name <a class="reference external" href="https://github.com/username">&#64;username</a></p></td>
+<td><p><a class="reference external" href="https://github.com/penguinerza">Al Ghifari Enerza Sentanu</a></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Service</strong></p></td>
-<td><p>&lt;service name&gt;</p></td>
+<td><p>E-Commerce</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Aplikasi</strong></p></td>
-<td><p>&lt;application used&gt;</p></td>
+<td><p>Joomla</p></td>
 </tr>
 </tbody>
 </table>
-<p><em>Brief descriptions</em></p>
+<p>Joomla merupakan aplikasi e-commerce open source yang dipublish oleh Open Source Matters, inc. Menggunakan MySQL sebagai database penyimpanan data.</p>
 <section id="proses-instalasi">
 <h2>Proses Instalasi<a class="headerlink" href="#proses-instalasi" title="Permalink to this heading"></a></h2>
-<p>TODO</p>
-</section>
-<section id="skenario-testing">
-<h2>Skenario Testing<a class="headerlink" href="#skenario-testing" title="Permalink to this heading"></a></h2>
-<p>TODO</p>
+<p>Untuk melakukan deployment joomla pada Google Kubernetes Engine, anda perlu mempersiapkan project pada Google Cloud Platform. Untuk mempersiapkan project, anda dapat mengikuti tutorial pada <a class="reference external" href="https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app">link berikut</a>.
+Setelah project terbuat, anda perlu mempersiapkan container registry joomla.</p>
+<p>Untuk membuat container registry joomla, anda dapat membuat Dockerfile dengan isi sebagai berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Base image</span>
+FROM<span class="w"> </span>php:7.4-apache
+
+<span class="c1"># Set working directory</span>
+WORKDIR<span class="w"> </span>/var/www/html
+
+<span class="c1"># Install dependencies</span>
+RUN<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>wget<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>unzip<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+
+<span class="c1"># Install Joomla</span>
+ARG<span class="w"> </span><span class="nv">JOOMLA_VERSION</span><span class="o">=</span><span class="m">4</span>-3-1
+RUN<span class="w"> </span>curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>joomla.zip<span class="w"> </span><span class="s2">&quot;https://downloads.joomla.org/cms/joomla4/</span><span class="si">${</span><span class="nv">JOOMLA_VERSION</span><span class="si">}</span><span class="s2">/Joomla_</span><span class="si">${</span><span class="nv">JOOMLA_VERSION</span><span class="si">}</span><span class="s2">-Stable-Full_Package.zip?format=zip&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span>unzip<span class="w"> </span>-q<span class="w"> </span>joomla.zip<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>joomla.zip
+
+<span class="c1"># Set file permissions</span>
+RUN<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>www-data:www-data<span class="w"> </span>/var/www/html
+
+<span class="c1"># Apache configuration</span>
+COPY<span class="w"> </span>apache-config.conf<span class="w"> </span>/etc/apache2/sites-available/000-default.conf
+RUN<span class="w"> </span>a2enmod<span class="w"> </span>rewrite
+
+<span class="c1"># Expose port</span>
+EXPOSE<span class="w"> </span><span class="m">80</span>
+
+<span class="c1"># Start Apache</span>
+CMD<span class="w"> </span><span class="o">[</span><span class="s2">&quot;apache2-foreground&quot;</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>Untuk versi joomla dapat anda sesuaikan dengan versi yang anda inginkan. Untuk membuat container registry, anda dapat menggunakan perintah berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>gcr.io/<span class="o">[</span>PROJECT-ID<span class="o">]</span>/joomla:v1<span class="w"> </span>.
+docker<span class="w"> </span>push<span class="w"> </span>gcr.io/<span class="o">[</span>PROJECT-ID<span class="o">]</span>/joomla:v1
+</pre></div>
+</div>
+<p>Karena proyek ini bernama miti-ta2, maka container registry yang digunakan adalah gcr.io/miti-ta2/joomla:v1. Sehingga perintah yang digunakan adalah sebagai berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>gcr.io/miti-ta2/joomla:v1<span class="w"> </span>.
+docker<span class="w"> </span>push<span class="w"> </span>gcr.io/miti-ta2/joomla:v1
+</pre></div>
+</div>
+<p>Anda dapat menggantinya sesuai dengan nama proyek anda.</p>
+<p>Setelah membuat container registry, berikutnya anda dapat membuat file joomla.yaml dengan isi sebagai berikut:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="nt">ports</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">targetPort</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="nt">selector</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla-deploy</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="nt">selector</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla</span>
+<span class="nt">template</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla</span>
+<span class="w">   </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla</span>
+<span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/miti-ta2/joomla@sha256:f136a05418dde8176b72e079065d07d6505cdafb4e76e32f8f6dec3bfbe70b86</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/www/html/configuration.php</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla-storage</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">subPath</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configuration.php</span>
+<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla-storage</span>
+<span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">configMap</span><span class="p p-Indicator">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla-config</span>
+</pre></div>
+</div>
+<p>File joomla.yaml adalah file yang digunakan untuk melakukan deployment joomla. Pada file ini sudah terdapat service dan deployment joomla. Selain itu, terdapat juga volume dan configMap yang digunakan untuk menyimpan konfigurasi joomla. Pada proyek ini, menggunakan configMap sebagai berikut:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joomla-config</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="nt">configuration.php</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">   </span><span class="no">&lt;?php</span>
+<span class="w">   </span><span class="no">class JConfig {</span>
+<span class="w">      </span><span class="no">// ...</span>
+<span class="w">      </span><span class="no">public $host = &#39;mariadb-1-mariadb&#39;;</span>
+<span class="w">      </span><span class="no">public $db = &#39;wordpress_ecommerce&#39;;</span>
+<span class="w">      </span><span class="no">public $user = &#39;root&#39;;</span>
+<span class="w">      </span><span class="no">public $password = &#39;sijs2pyBmoNHk38QiW4EdFQZTyXsnC5N&#39;;</span>
+<span class="w">      </span><span class="no">// ...</span>
+<span class="w">   </span><span class="no">}</span>
+<span class="w">   </span><span class="no">?&gt;</span>
+</pre></div>
+</div>
+<p>Anda dapat menyesuaikan konfigurasi joomla sesuai dengan kebutuhan anda. Setelah membuat file joomla.yaml dan joomla-config.yaml, anda dapat melakukan deployment joomla dengan menggunakan perintah berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>joomla-config.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>joomla.yaml
+</pre></div>
+</div>
+<p>Setelah melakukan deployment, anda dapat melihat status deployment dengan menggunakan perintah berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>joomla-deploy
+</pre></div>
+</div>
+<p>Setelah deployment selesai, anda dapat melihat status pod dengan menggunakan perintah berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+</pre></div>
+</div>
+<p>Setelah pod berstatus running, anda dapat melihat status service dengan menggunakan perintah berikut:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>joomla
+</pre></div>
+</div>
+<p>Setelah service berstatus running, anda dapat mengakses joomla dengan menggunakan external IP tersebut.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Untuk melakukan instalasi joomla, anda membutuhkan database MySQL terlebih dahulu.</p>
+</div>
 </section>
 </section>
 
